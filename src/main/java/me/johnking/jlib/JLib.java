@@ -16,6 +16,9 @@ public class JLib extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        protocolManager = new ProtocolManager(this);
+        disguiseManager = new DisguiseManager(this, protocolManager);
     }
 
     public static ProtocolManager getProtocolManager(){
