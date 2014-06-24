@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<project name="maven-antrun-" default="main"  >
-<target name="main">
-  <copy file="target/JLib-1.0.0.jar" tofile="D:\Benutzer\Marco\Z_Projects\JLib.jar"/>
-</target>
-</project>
