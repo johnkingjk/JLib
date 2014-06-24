@@ -92,7 +92,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy file="target/${artifactId}-${version}.jar"
+                                <copy file="target/${project.artifactId}-${project.version}.jar"
                                       tofile="D:\Benutzer\Marco\Z_Projects\${project.artifactId}.jar" />
                             </target>
                         </configuration>
