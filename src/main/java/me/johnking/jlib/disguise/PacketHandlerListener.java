@@ -65,7 +65,7 @@ public class PacketHandlerListener implements PacketListener{
 				int entityId = event.getPacket().getInt(0);
 				for(PlayerDisguise disguise: disguiseManager.getDisguises()){
 					if(entityId == disguise.getEntityId()){
-						GameProfile profile = new GameProfile(event.getPacket().getObject(GameProfile.class, 0).getName(), disguise.getNewName());
+						GameProfile profile = new GameProfile(event.getPacket().getObject(GameProfile.class, 0).getId(), disguise.getNewName());
 						
 						event.getPacket().setObject(GameProfile.class, 0, profile);
 					}

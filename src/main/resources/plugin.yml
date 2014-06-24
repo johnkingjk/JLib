@@ -1,0 +1,5 @@
+name: JLib
+author: Johnking
+version: 1.0.0
+main: me.johnking.jlib.JLib
+description: a bukkit library
