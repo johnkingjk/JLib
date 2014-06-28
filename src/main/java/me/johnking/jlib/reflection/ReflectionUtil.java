@@ -5,6 +5,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -166,6 +167,28 @@ public class ReflectionUtil
             }
             return null;
         }
+    }
+
+    public static Constructor<?> getConstructor(Class<?> clazz, Class<?> ... parameterTypes){
+        try{
+            Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+            constructor.setAccessible(true);
+            return constructor;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean isStatic(Field field){
+        if(field == null){
+            throw new IllegalArgumentException("Field cannot be null");
+        }
+        try {
+            field.get(null);
+            return true;
+        } catch (Exception e){}
+        return false;
     }
 
 
