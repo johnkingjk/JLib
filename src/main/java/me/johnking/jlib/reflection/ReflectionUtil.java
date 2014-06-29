@@ -152,7 +152,15 @@ public class ReflectionUtil
         return null;
     }
 
-    //by Johnking
+    public static Method getMethod(Class<?> clazz, Class<?>[] parameterTypes, Class<?> returnType){
+        for(Method m : clazz.getMethods()){
+            if(ClassListEqual(parameterTypes, m.getParameterTypes()) && m.getReturnType().equals(returnType)){
+                return m;
+            }
+        }
+        return null;
+    }
+
     public static Method getMethod(Class<?> clazz, String methodName){
         try {
             Method method = clazz.getDeclaredMethod(methodName);
