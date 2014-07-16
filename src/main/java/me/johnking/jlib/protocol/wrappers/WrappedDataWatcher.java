@@ -2,9 +2,12 @@ package me.johnking.jlib.protocol.wrappers;
 
 import me.johnking.jlib.reflection.ClassAccessor;
 import me.johnking.jlib.reflection.ReflectionUtil;
+import org.bukkit.entity.Entity;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 
@@ -16,6 +19,7 @@ public class WrappedDataWatcher extends AbstractWrapper{
     private static final Class<?> DATA_WATCHER_CLASS = ReflectionUtil.getMinecraftClass("DataWatcher");
     private static final ClassAccessor DATA_WATCHER_ACCESSOR = new ClassAccessor(DATA_WATCHER_CLASS);
     private static final Constructor<?> DATA_WATCHER_CONSTRUCTOR = ReflectionUtil.getConstructor(DATA_WATCHER_CLASS, ReflectionUtil.getMinecraftClass("Entity"));
+    private static final Method DATA_WATCHER_METHOD = ReflectionUtil.getMethod(ReflectionUtil.getMinecraftClass("Entity"), "getDataWatcher");
 
     private static final Field TYPE_MAP_FIELD = DATA_WATCHER_ACCESSOR.withTypeAndIndex(Map.class, 0);
     private static final Field VALUE_MAP_FIELD = DATA_WATCHER_ACCESSOR.withTypeAndIndex(Map.class, 1);
@@ -30,6 +34,26 @@ public class WrappedDataWatcher extends AbstractWrapper{
     public WrappedDataWatcher(){
         super(DATA_WATCHER_CLASS);
         setHandle(newHandle());
+
+        try {
+            lock = (ReadWriteLock) READ_WRITE_LOCK_FIELD.get(this.handle);
+            watchableObjects = (Map<Integer, Object>) VALUE_MAP_FIELD.get(this.handle);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public WrappedDataWatcher(Entity entity){
+        super(DATA_WATCHER_CLASS);
+        Object dataWatcher = null;
+        try {
+            dataWatcher = DATA_WATCHER_METHOD.invoke(getEntityHandle(entity));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        setHandle(dataWatcher);
 
         try {
             lock = (ReadWriteLock) READ_WRITE_LOCK_FIELD.get(this.handle);
