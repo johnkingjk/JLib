@@ -3,6 +3,7 @@ package me.johnking.jlib.protocol.util;
 import me.johnking.jlib.reflection.ReflectionUtil;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
@@ -21,6 +22,10 @@ public class EntityUtilities {
     private static final Method ENTITY_TRACKER_ENTRY = ReflectionUtil.getMethod(ReflectionUtil.getMinecraftClass("IntHashMap"), new Class[]{Integer.TYPE}, Object.class);
     private static final Field TRACKER_PLAYER = ReflectionUtil.getFieldByType(ReflectionUtil.getMinecraftClass("EntityTrackerEntry"), Set.class);
     private static final Method SCAN_PLAYERS = ReflectionUtil.getMethod(ReflectionUtil.getMinecraftClass("EntityTrackerEntry"), "scanPlayers", new Class[]{List.class});
+    private static final Method GET_HANDLE = ReflectionUtil.getMethod(ReflectionUtil.getCraftBukkitClass("entity.CraftEntity"), "getHandle");
+    private static final Field KILLER_FIELD = ReflectionUtil.getField(ReflectionUtil.getMinecraftClass("EntityLiving"), "killer");
+    private static final Field TIME_FIELD = ReflectionUtil.getField(ReflectionUtil.getMinecraftClass("EntityLiving"), "lastDamageByPlayerTime");
+
 
     public static void updateEntity(Entity entity, List<Player> player) {
         try {
@@ -52,6 +57,28 @@ public class EntityUtilities {
             Object trackedEntities = TRACKED_ENTITIES.get(entityTracker);
 
             return ENTITY_TRACKER_ENTRY.invoke(trackedEntities, entityId);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void setKiller(LivingEntity entityLiving, Player player, int time){
+        Object entityHandle = getHandle(entityLiving);
+        Object playerHandle = getHandle(player);
+
+        try {
+            KILLER_FIELD.set(entityHandle, playerHandle);
+
+            TIME_FIELD.set(entityHandle, time);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static Object getHandle(Entity entity){
+        try {
+            return GET_HANDLE.invoke(entity);
         } catch (Exception e){
             e.printStackTrace();
         }
