@@ -68,6 +68,15 @@ public class ReflectionUtil
         }
     }
 
+    public static Class<?> getClass(String name){
+        try {
+            return Class.forName(name);
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static Object getHandle(World world) {
         Object nms_entity = null;
         Method entity_getHandle = getMethod(world.getClass(), "getHandle");
