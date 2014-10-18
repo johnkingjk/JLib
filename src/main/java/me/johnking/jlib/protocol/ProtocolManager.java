@@ -41,6 +41,12 @@ public class ProtocolManager {
 			}
 		}
 	}
+
+    public void unregisterListener(PacketListener listener) {
+        for(PacketType type : packetController.getPacketTypes()) {
+            type.getPacketListener().remove(listener);
+        }
+    }
 	
 	public void sendPacket(Object packet, Player ... players){
 		sendPacket(new Object[]{packet}, players);
